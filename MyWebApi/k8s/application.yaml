@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-web-api
+  template:
+    metadata:
+      labels:
+        app: my-web-api
+    spec:
+      containers:
+      - name: my-web-api
+        image: ghcr.io/dsanchor/demo-copilot-1402:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-web-api
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: my-web-api
