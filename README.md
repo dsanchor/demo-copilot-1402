@@ -62,3 +62,42 @@ docker stop mywebapi
 docker rm mywebapi
 ```
 
+## Deploy to AKS
+
+### Environment variables for RG and CLUSTER
+
+```bash
+export RESOURCE_GROUP=aks-demo-alb-rg
+export CLUSTER_NAME=demo
+export NAMESPACE=demo
+```
+
+## Get credentials
+
+```bash
+az aks get-credentials -g $RESOURCE_GROUP -n $CLUSTER_NAME
+```
+
+## Create a namespace
+
+```bash
+kubectl create namespace $NAMESPACE
+```
+
+## Deploy the application
+
+```bash
+kubectl apply -f k8s/application.yml -n $NAMESPACE
+```
+
+## Get service IP
+
+```bash
+export SVCIP=`kubectl get service webapi-service -n $NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].ip}'`
+```
+
+## Test the application
+
+```bash
+curl http://$SVCIP/weatherforecast
+```
